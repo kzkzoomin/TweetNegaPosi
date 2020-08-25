@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <!-- This file has been downloaded from Bootsnipp.com. Enjoy! -->
+  <title> ネガポジ分析|ネガポジ分析ツールFOR Twitter</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!--CSS-->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.css">
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="../static/css/dashboard.css">
+  <!--JS-->
+  <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+</head>
+<body>
+    <!--search bar-->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
+
+    <div class="container">
+        <!--ナビバー-->
+        <nav class="navbar fixed-top navbar-expand-md custom-navbar navbar-dark">
+            <div class="navbar-brand nav-link" ><b>ツイートネガポジ分析</b></div>
+        </nav>
+        </br></br></br></br>
+    
+        <!--結果表示-->
+        <div class="row">
+            {% for azure_post_single in azure_json %}
+                <div class="col-md-3 py-2">
+                    <div class="card h-100 card-body">
+                        <div class="card-body">
+                            <p class="card-text">{{azure_post_single['text']}}</p>
+                            <p class="card-text">いいね数：{{azure_post_single['favorite_count']}}</p>
+                            <p class="card-text">RT数：{{azure_post_single['retweet_count']}}</p>
+                            <p class="card-text">ネガポジ度：{{azure_post_single['score']}}</p>
+                            <a href={{azure_post_single['tweet_url']}} target="_blank" class="btn btn-outline-secondary">元ツイート</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>
