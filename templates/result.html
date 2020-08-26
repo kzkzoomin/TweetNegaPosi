@@ -21,13 +21,70 @@
     <div class="container">
         <!--ナビバー-->
         <nav class="navbar fixed-top navbar-expand-md custom-navbar navbar-dark">
-            <div class="navbar-brand nav-link" ><b>ツイートネガポジ分析</b></div>
+            <div class="navbar-brand nav-link" ><a class="nav-link" href="/"><b>ツイートネガポジ分析</b></a></div>
+            <div class="collapse navbar-collapse " id="collapsibleNavbar">
+                <ul class="navbar-nav ml-auto ">
+                   <li class="nav-item">
+                       <a class="nav-link" href="/"><b>ハッシュタグを再検索</b></a>
+                    </li>     
+                    <li class="nav-item">
+                        <form name="form2" action="/post_nega?search_word={{search_word}}" method="post" >
+                          <input type="hidden" name="tweets" value="{{azure_json}}">
+                        <a class="nav-link" href="javascript:form2.submit()"><b>ネガティブ投稿ランキング</b></a>
+                        </form>
+                      </li>
+                      <li class="nav-item">
+                        <form name="form3" action="/post_posi?search_word={{search_word}}" method="post" >
+                          <input type="hidden" name="tweets" value="{{azure_json}}">
+                        <a class="nav-link" href="javascript:form3.submit()"><b>ポジティブ投稿ランキング</b></a>
+                        </form>
+                      </li>
+                   <li class="nav-item">
+                       <form name="form1" action="/post_good?search_word={{search_word}}" method="post" >
+                         <input type="hidden" name="tweets" value="{{azure_json}}">
+                       <a class="nav-link" href="javascript:form1.submit()"><b>いいね数ランキング</b></a>
+                       </form>
+                    </li>
+                    <li class="nav-item">
+                        <form name="form4" action="/post_RT?search_word={{search_word}}" method="post" >
+                          <input type="hidden" name="tweets" value="{{azure_json}}">
+                        <a class="nav-link" href="javascript:form4.submit()"><b>RT数ランキング</b></a>
+                        </form>
+                      </li>
+                </ul>
+            </div>
         </nav>
         </br></br></br></br>
     
-        <!--結果表示-->
+        <!-- タイトル -->
         <div class="row">
-            {% for azure_post_single in azure_json %}
+            <div class="col-lg-12 text-center my-2 portfolio-menu mt-2 mb-4">
+              {% if(HASHTAG_POSTS_POSI) %}
+              <br/><h4>ポジティブ投稿ランキング</h4>
+              １に近いほどポジティブな投稿を、０に近いほどネガティブな投稿である可能性を表します<br/>
+              {% endif %}
+
+              {% if(HASHTAG_POSTS_NEGA) %}
+              <br/><h4>ネガティブ投稿ランキング</h4>
+              １に近いほどポジティブな投稿を、０に近いほどネガティブな投稿である可能性を表します<br/>
+              {% endif %}
+
+              {% if(HASHTAG_POSTS_GOOD) %}
+              <br/><h4>いいね数投稿ランキング</h4><br/>
+              {% endif %}
+
+              {% if(HASHTAG_POSTS_RT) %}
+              <br/><h4>RT数投稿ランキング</h4><br/>
+              {% endif %}
+              
+               <br/><h4>「{{ search_word }}」の検索結果</h4>
+            </div>
+        </div>
+        
+        <!-- いいね数順 -->
+        {% if(HASHTAG_POSTS_GOOD) %}
+        <div class="row">
+            {%for azure_post_single in azure_json|sort(attribute='favorite_count', reverse = True) %}
                 <div class="col-md-3 py-2">
                     <div class="card h-100 card-body">
                         <div class="card-body">
@@ -40,6 +97,74 @@
                     </div>
                 </div>
             {% endfor %}
+        
+        <!-- RT数順 -->
+        {% elif(HASHTAG_POSTS_RT) %}
+        <div class="row">
+            {%for azure_post_single in azure_json|sort(attribute='retweet_count', reverse = True) %}
+                <div class="col-md-3 py-2">
+                    <div class="card h-100 card-body">
+                        <div class="card-body">
+                            <p class="card-text">{{azure_post_single['text']}}</p>
+                            <p class="card-text">いいね数：{{azure_post_single['favorite_count']}}</p>
+                            <p class="card-text">RT数：{{azure_post_single['retweet_count']}}</p>
+                            <p class="card-text">ネガポジ度：{{azure_post_single['score']}}</p>
+                            <a href={{azure_post_single['tweet_url']}} target="_blank" class="btn btn-outline-secondary">元ツイート</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+
+        <!-- ネガティブ順 -->
+        {% elif(HASHTAG_POSTS_NEGA) %}
+        <div class="row">
+            {%for azure_post_single in azure_json|sort(attribute='score') %}
+                <div class="col-md-3 py-2">
+                    <div class="card h-100 card-body">
+                        <div class="card-body">
+                            <p class="card-text">{{azure_post_single['text']}}</p>
+                            <p class="card-text">いいね数：{{azure_post_single['favorite_count']}}</p>
+                            <p class="card-text">RT数：{{azure_post_single['retweet_count']}}</p>
+                            <p class="card-text">ネガポジ度：{{azure_post_single['score']}}</p>
+                            <a href={{azure_post_single['tweet_url']}} target="_blank" class="btn btn-outline-secondary">元ツイート</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+            
+        <!-- ポジティブ順 -->
+        {% elif(HASHTAG_POSTS_POSI) %}
+        <div class="row">
+            {%for azure_post_single in azure_json|sort(attribute='score', reverse = True) %}
+                <div class="col-md-3 py-2">
+                    <div class="card h-100 card-body">
+                        <div class="card-body">
+                            <p class="card-text">{{azure_post_single['text']}}</p>
+                            <p class="card-text">いいね数：{{azure_post_single['favorite_count']}}</p>
+                            <p class="card-text">RT数：{{azure_post_single['retweet_count']}}</p>
+                            <p class="card-text">ネガポジ度：{{azure_post_single['score']}}</p>
+                            <a href={{azure_post_single['tweet_url']}} target="_blank" class="btn btn-outline-secondary">元ツイート</a>
+                        </div>
+                    </div>
+                </div>
+        {% endfor %}
+        <!--普通の結果表示（新しい順）-->
+        {% else %}
+        <div class="row">
+            {% for azure_post_single in azure_json|sort(attribute='created_at', reverse = True) %}
+                <div class="col-md-3 py-2">
+                    <div class="card h-100 card-body">
+                        <div class="card-body">
+                            <p class="card-text">{{azure_post_single['text']}}</p>
+                            <p class="card-text">いいね数：{{azure_post_single['favorite_count']}}</p>
+                            <p class="card-text">RT数：{{azure_post_single['retweet_count']}}</p>
+                            <p class="card-text">ネガポジ度：{{azure_post_single['score']}}</p>
+                            <a href={{azure_post_single['tweet_url']}} target="_blank" class="btn btn-outline-secondary">元ツイート</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% endif %}
         </div>
     </div>
 </body>

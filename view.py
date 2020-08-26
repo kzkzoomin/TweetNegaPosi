@@ -8,6 +8,9 @@ import requests
 # ツイート検索・感情分析
 import azure_negaposi_function
 
+# ソート時のJSONリストの処理
+import ast
+
 # ログイン情報（ローカル確認用　デプロイ時にコメントアウト）
 import info_val
 CK = info_val.CK
@@ -29,6 +32,13 @@ sentiment_api_url = info_val.sentiment_api_url
 
 app = Flask(__name__)
 
+# ソート用（フォームから値を受け取る）
+def request_form_azure_json():
+    POSTS = request.form['tweets']
+    keyword = request.args.get('search_word')
+    
+    return POSTS,keyword
+
 #トップページ
 @app.route('/')
 def index():
@@ -49,6 +59,43 @@ def post():
         # 200だったらネガポジ判定
         negaposi_azure_json=azure_negaposi_function.nega_posi_azure(azure_json)
         return render_template('result.html',azure_json=negaposi_azure_json['documents'],search_word=keyword)
+
+# いいね順ソート
+@app.route('/post_good', methods=['POST'])
+def post_good():
+    POSTS, keyword = request_form_azure_json()
+    azure_json = ast.literal_eval(POSTS)
+    HASHTAG_POSTS_GOOD=True
+
+    return render_template('result.html',HASHTAG_POSTS_GOOD=HASHTAG_POSTS_GOOD,azure_json=azure_json, search_word=keyword)
+
+# ネガティブ順ソート
+@app.route('/post_nega', methods=['POST'])
+def post_nega():
+    POSTS, keyword = request_form_azure_json()
+    azure_json = ast.literal_eval(POSTS)
+    HASHTAG_POSTS_NEGA=True
+
+    return render_template('result.html',HASHTAG_POSTS_NEGA=HASHTAG_POSTS_NEGA,azure_json=azure_json, search_word=keyword)
+
+# ポジティブ順ソート
+@app.route('/post_posi', methods=['POST'])
+def post_posi():
+    POSTS, keyword = request_form_azure_json()
+    azure_json = ast.literal_eval(POSTS)
+    HASHTAG_POSTS_POSI=True
+
+    return render_template('result.html',HASHTAG_POSTS_POSI=HASHTAG_POSTS_POSI,azure_json=azure_json, search_word=keyword)
+
+# RT数順ソート
+@app.route('/post_RT', methods=['POST'])
+def post_RT():
+    POSTS, keyword = request_form_azure_json()
+    azure_json = ast.literal_eval(POSTS)
+    HASHTAG_POSTS_RT=True
+
+    return render_template('result.html',HASHTAG_POSTS_RT=HASHTAG_POSTS_RT,azure_json=azure_json, search_word=keyword)
+    
 
 if __name__ == '__main__':
     #app.jinja_env.add_extension('jinja2.ext.loopcontrols')
