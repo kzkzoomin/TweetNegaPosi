@@ -2,6 +2,7 @@ import requests
 import json
 from requests_oauthlib import OAuth1Session
 import ast
+import os
 
 # ログイン情報（ローカル確認用　デプロイ時にコメントアウト）
 #import info_val
