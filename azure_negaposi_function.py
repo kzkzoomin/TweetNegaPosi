@@ -4,23 +4,23 @@ from requests_oauthlib import OAuth1Session
 import ast
 
 # ログイン情報（ローカル確認用　デプロイ時にコメントアウト）
-import info_val
-CK = info_val.CK
-CKS = info_val.CKS
-AT = info_val.AT
-ATS = info_val.ATS
-subscription_key = info_val.subscription_key
-text_analytics_base_url = info_val.text_analytics_base_url
-sentiment_api_url = info_val.sentiment_api_url
+#import info_val
+#CK = info_val.CK
+#CKS = info_val.CKS
+#AT = info_val.AT
+#ATS = info_val.ATS
+#subscription_key = info_val.subscription_key
+#text_analytics_base_url = info_val.text_analytics_base_url
+#sentiment_api_url = info_val.sentiment_api_url
 
 # ログイン情報（公開用）
-#CK = os.environ["CK"]
-#CKS = os.environ["CKS"]
-#AT = os.environ["AT"]
-#ATS = os.environ["ATS"]
-#subscription_key = os.environ["subscription_key"]
-#text_analytics_base_url = os.environ["text_analytics_base_url"]
-#sentiment_api_url = os.environ["sentiment_api_url"]
+CK = os.environ["CK"]
+CKS = os.environ["CKS"]
+AT = os.environ["AT"]
+ATS = os.environ["ATS"]
+subscription_key = os.environ["subscription_key"]
+text_analytics_base_url = os.environ["text_analytics_base_url"]
+sentiment_api_url = text_analytics_base_url + "/text/analytics/v2.1/sentiment"
 
 ################################################################
 # キーワード検索して投稿ごとのJSONのリストを取得
