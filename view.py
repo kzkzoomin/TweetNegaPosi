@@ -103,4 +103,5 @@ if __name__ == '__main__':
 
     # debugモード/どこからでもアクセス可能に
     #app.run(debug=True, host='0.0.0.0')
-    app.run()
+    port = int(os.getenv("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
